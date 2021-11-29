@@ -110,6 +110,20 @@ class ViewController: UIViewController {
             fatalError("Failed to create request")
         }
     }()
+    lazy var healthClassificationRequest: VNCoreMLRequest = {
+         do{
+             let classifier = try HealthyClassifier(configuration: MLModelConfiguration())
+             let model = try VNCoreMLModel(for: classifier.model)
+             let request = VNCoreMLRequest(model: model, completionHandler: {
+                 [weak self] request,error in
+                 self?.processObservations(for: request, error: error)
+             })
+             request.imageCropAndScaleOption = .centerCrop
+             return request
+         } catch {
+             fatalError("Failed to create request")
+         }
+     }()
   func classify(image: UIImage) {
     let scaledImage = image.scalePreservingAspectRatio(targetSize: CGSize(width: 299, height: 299))
     guard let pixelbuffer = scaledImage.toCVPixelBuffer() else { return }
@@ -118,7 +132,7 @@ class ViewController: UIViewController {
     do {
         self.resultsLabel.text! = ""
         try handler.perform([self.classificationRequest])
-        //try healthHandler.perform([self.healthClassificationRequest])
+        try healthHandler.perform([self.healthClassificationRequest])
     } catch {
         print("Failed to perform classification: \(error)")
     }
