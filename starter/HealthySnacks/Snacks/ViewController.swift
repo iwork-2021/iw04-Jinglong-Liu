@@ -157,18 +157,18 @@ extension ViewController {
             } else {
                 let result = results[0].identifier
                 let confidence = results[0].confidence
-                if confidence < 0.8 {
+                if confidence < 0.85 {
                     if self.resultsLabel.text?.isEmpty == false {
                         self.resultsLabel.text! += "\n"
                     }
-                    self.resultsLabel.text! += "It is " + result + "? Not sure"
+                    self.resultsLabel.text! += "Is it " + result + "? Not sure"
                 } else {
                     if self.resultsLabel.text?.isEmpty == false {
                         self.resultsLabel.text! += "\n"
                     }
                     self.resultsLabel.text! += result
                     self.resultsLabel.text! += " - "
-                    self.resultsLabel.text! += String(format: "%.1f%%", confidence * 100)
+                    self.resultsLabel.text! += String(format: "%.2f%%", confidence * 100)
                     print(result)
                 }
             }
